@@ -1,5 +1,6 @@
 import json
 from KMP import *
+import helper
 
 #open file
 with open('data/data_13_21.json') as f1:
@@ -34,23 +35,15 @@ def NimSearch(x):
 
 def JurusanAngkatanSearch(x):
     db = []         
+    x = x.split()
+    jur = x[0:len(x)-1]
+    jurusan = " ".join(jur)
+    angkatan = x[len(x)-1]
     
-    jurusan = x.split()[0].upper()
-    angkatan = x.split()[1]
-    kjurusan=[]
-    if jurusan in data_kf:
-        kjurusan.append(data_kf[jurusan])
-    elif jurusan in data_kj:
-        kjurusan.append(data_kj[jurusan])
-    else:
-        keys_j = list(data_lj.keys())
-        for i in keys_j:
-            if KMP(data_lj[i],jurusan):
-                kjurusan.append(i)
-        # keys_f = list(data_lf.keys())
-        # for i in keys_f:
-        #     if KMP(data_lf[i],jurusan):
-        #         kjurusan.append(i)
+    kjurusan = getKodeJurusan(jurusan.capitalize())
+    if kjurusan == []:
+        kjurusan = getKodeJurusan(jurusan)
+
     for a in kjurusan:
         NIM = a+angkatan
         db1 = NimSearch(NIM)
@@ -62,18 +55,30 @@ def JurusanAngkatanSearch(x):
                     db.append(item)        
     return db
 
-def JurusanSearch(jurusan):
-    db = []
+def getKodeJurusan(jurusan):
     kjurusan=[]
     keys_j = list(data_lj.keys())
-    for i in keys_j:
-        if KMP(data_lj[i],jurusan.upper()):
-            kjurusan.append(i)
-    # keys_f = list(data_lf.keys())
-    # for i in keys_f:
-    #     if KMP(data_lf[i],jurusan):
-    #         kjurusan.append(i)
+    keys_kj = list(data_kj.keys())
+    keys_kf = list(data_kf.keys())
 
+    if jurusan.upper() in keys_kj:
+        kjurusan.append(data_kj[jurusan.upper()])
+    if kjurusan == [] and jurusan.upper() in keys_kf:
+        kjurusan.append(data_kj[jurusan.upper()])
+    
+    if kjurusan == [] :
+        for i in keys_j:
+            if KMP(data_lj[i],jurusan.capitalize()):
+                kjurusan.append(i)
+
+    kjurusan = helper.unique(kjurusan)
+    return kjurusan
+
+def JurusanSearch(jurusan):
+    db = []
+    kjurusan = getKodeJurusan(jurusan.capitalize())
+    if kjurusan == []:
+        kjurusan = getKodeJurusan(jurusan)
     for NIM in kjurusan:
         for item in data1:
             if item[1][0:3] == NIM:
@@ -99,7 +104,7 @@ def NameSearch(name):
         list = [name]
     for nama in list:
         for item in data1:
-            if KMP(item[0],nama):
+            if KMP(item[0].lower(),nama.lower()):
                 try:
                     mahasiswa = [item[0],item[1],item[2],data_lf[item[1][0:3]],data_lj[item[2][0:3]]]
                 except:
@@ -107,3 +112,47 @@ def NameSearch(name):
                 if mahasiswa not in db:
                     db.append(mahasiswa)
     return db
+
+def CompleteSearch(angkatan, nim, str_input):
+    db1 = [] #pencarian nim
+    db2 = [] #pencarian nama
+    result = []
+
+    list_jurusan = helper.powerset(str_input)
+    for item in list_jurusan:
+        kode_jurusan = getKodeJurusan(item)
+        if kode_jurusan != []:
+            for kode in kode_jurusan:
+                try: 
+                    NIM = kode+angkatan+nim
+                except:
+                    NIM = kode+angkatan
+                tes = NimSearch(NIM)
+                for element in tes:
+                    if element not in db1:
+                        db1.append(element)
+    
+    db2 = NameSearch(" ".join(str_input))
+    result = helper.intersection(db1,db2)
+    result = helper.unique(result + db1 + db2)
+    return result
+                
+        
+
+
+    
+
+
+
+# db = CompleteSearch("Tito IF 19  007")
+# if db == []:
+#     print("No results found")
+# else:
+#     for i in range(5):
+#         print("Nama: " + db[i][0])
+#         print("NIM Fakultas: " + db[i][1])
+#         print("NIM Jurusan: " + db[i][2])
+#         print("Fakultas: " + db[i][3])
+#         print("Jurusan: " + db[i][4])
+#         print()
+
