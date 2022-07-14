@@ -1,6 +1,7 @@
 import json
-from KMP import *
-import helper
+import src.helper as helper
+import src.KMP as KMP
+import src.helper as helper
 
 #open file
 with open('data/data_13_21.json') as f1:
@@ -18,17 +19,17 @@ def NimSearch(x):
     db = []         
     for i in range(len(data1)):
         item = data1[i]
-        found = KMP(item[1],x)
+        found = KMP.KMP(item[1],x)
         if not found:
             try:
-                found = KMP(item[2],x)
+                found = KMP.KMP(item[2],x)
             except:
                 pass
         if found:
             try:
                 mahasiswa = [item[0],item[1],item[2],data_lf[item[1][0:3]],data_lj[item[2][0:3]]]
             except:
-                mahasiswa = [item[0],item[1],"-",data_lf[item[1][0:3]],"-"]
+                mahasiswa = [item[0],item[1],None,data_lf[item[1][0:3]],None]
             db.append(mahasiswa)   
         i += 1
     return db
@@ -68,7 +69,7 @@ def getKodeJurusan(jurusan):
     
     if kjurusan == [] :
         for i in keys_j:
-            if KMP(data_lj[i],jurusan.capitalize()):
+            if KMP.KMP(data_lj[i],jurusan.capitalize()):
                 kjurusan.append(i)
 
     kjurusan = helper.unique(kjurusan)
@@ -85,7 +86,7 @@ def JurusanSearch(jurusan):
                 try:
                     mahasiswa = [item[0],item[1],item[2],data_lf[item[1][0:3]],data_lj[item[2][0:3]]]
                 except:
-                    mahasiswa = [item[0],item[1],"-",data_lf[item[1][0:3]],"-"]
+                    mahasiswa = [item[0],item[1],None,data_lf[item[1][0:3]],None]
                 db.append(mahasiswa)
             else:
                 try:
@@ -104,11 +105,11 @@ def NameSearch(name):
         list = [name]
     for nama in list:
         for item in data1:
-            if KMP(item[0].lower(),nama.lower()):
+            if KMP.KMP(item[0].lower(),nama.lower()):
                 try:
                     mahasiswa = [item[0],item[1],item[2],data_lf[item[1][0:3]],data_lj[item[2][0:3]]]
                 except:
-                    mahasiswa = [item[0],item[1],"-",data_lf[item[1][0:3]],"-"]
+                    mahasiswa = [item[0],item[1],None,data_lf[item[1][0:3]],None]
                 if mahasiswa not in db:
                     db.append(mahasiswa)
     return db

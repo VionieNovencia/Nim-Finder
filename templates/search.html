@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nim-Finder</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename = 'style.css')}}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="header">Nim-Finder.</h1>
+          <form action="/" method="post">
+            <div class="form-group">
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    class="search-form"
+                    id="user_input"
+                    name="user_input"
+                    placeholder="Search..."
+                  />
+                </td>
+                <td>
+                  <button type="submit" class="search-btn">Search</button>
+                </td>
+              </tr>
+            </div>
+          </form>
+        </div>
+      </div>
+      {% if result %}
+      <h3>Hasil pencarian untuk "{{user}}"</h3>
+      <div class="result">
+        {% for row in result %}
+        <div class="table_content">
+          <table>
+            <tr align="center">
+              <td class="left">{{row[0]}}</td>
+              <td class="right">{{row[1]}}</td>
+            </tr>
+            <tr>
+              {% if row[2] %}
+              <td class="left">{{row[4]}}</td>
+
+              {% else %}
+              <td class="left">{{row[3]}}</td>
+              {% endif %}
+              <td class="right">{{row[2]}}</td>
+            </tr>
+          </table>
+        </div>
+        {% endfor %} {% if next>10 %}
+        <form method="post" action="/next">
+          <button onclick="nextPage">Next</button>
+          <input
+            type="text"
+            class="search-form"
+            id="user_input"
+            name="user_input"
+            value="{{user}}"
+            hidden
+          />
+        </form>
+        {% endif %} {% if prev >0 %}
+        <form method="post" action="/prev">
+          <button onclick="nextPage">prev</button>
+          <input
+            type="text"
+            class="search-form"
+            id="user_input"
+            name="user_input"
+            value="{{user}}"
+            hidden
+          />
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </body>
+</html>
