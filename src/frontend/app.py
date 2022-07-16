@@ -1,7 +1,10 @@
 from cgitb import reset
 from logging import exception
+from poplib import error_proto
 from flask import Flask,render_template,redirect,request, session
-import src.main as main
+import sys
+sys.path.append('../')
+import backend.main as main
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -19,6 +22,9 @@ def getResult(Page):
             result = db[session['page']*10: session['page']*10+10]
             print(len(result))
             return render_template("search.html", result = result, next = len(db)-Page*10, prev = Page*10,user=user_input)
+        else:
+            error = "No results found"
+            return render_template("search.html", error = error, user=user_input)
     return render_template("search.html", result = None ,user="",  next = 0, prev = 0)
 
 @app.route('/', methods=['GET', 'POST'])

@@ -1,4 +1,4 @@
-import src.search as search
+import backend.search as search
 
 def Search(user_input):
     suku_kata = user_input.split()

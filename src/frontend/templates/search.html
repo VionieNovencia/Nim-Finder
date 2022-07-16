@@ -28,14 +28,14 @@
                   />
                 </td>
                 <td>
-                  <button type="submit" class="search-btn">Search</button>
+                  <button type="submit" class="btn">Search</button>  
                 </td>
               </tr>
             </div>
           </form>
         </div>
       </div>
-      {% if result %}
+      {% if result  and result != error %}
       <h3>Hasil pencarian untuk "{{user}}"</h3>
       <div class="result">
         {% for row in result %}
@@ -52,37 +52,49 @@
               {% else %}
               <td class="left">{{row[3]}}</td>
               {% endif %}
+              {% if row[2] %}
               <td class="right">{{row[2]}}</td>
+              {% endif %}
             </tr>
           </table>
         </div>
-        {% endfor %} {% if next>10 %}
-        <form method="post" action="/next">
-          <button onclick="nextPage">Next</button>
-          <input
-            type="text"
-            class="search-form"
-            id="user_input"
-            name="user_input"
-            value="{{user}}"
-            hidden
-          />
-        </form>
-        {% endif %} {% if prev >0 %}
-        <form method="post" action="/prev">
-          <button onclick="nextPage">prev</button>
-          <input
-            type="text"
-            class="search-form"
-            id="user_input"
-            name="user_input"
-            value="{{user}}"
-            hidden
-          />
-        </form>
-        {% endif %}
+        {% endfor %}
+        <div class="pagination">
+          <div class="left">
+            {% if prev >0 %}
+            <form method="post" action="/prev">
+              <button class="btn" onclick="nextPage">Prev</button>
+              <input
+                type="text"
+                class="search-form"
+                id="user_input"
+                name="user_input"
+                value="{{user}}"
+                hidden
+              />
+            </form>
+            {% endif %}
+          </div>
+          <div class="right">
+            {% if next>10 %}
+            <form method="post" action="/next">
+              <button class="btn" onclick="nextPage">Next</button>
+              <input
+                type="text"
+                class="search-form"
+                id="user_input"
+                name="user_input"
+                value="{{user}}"
+                hidden
+              />
+            </form>
+            {% endif %}
+          </div>
+        </div>
       </div>
-    </div>
-    {% endif %}
+      {% endif %}
+      {% if error %}
+        <h3>Tidak ditemukan hasil yang cocok untuk "{{user}}"</h3>
+      {% endif %}
   </body>
 </html>

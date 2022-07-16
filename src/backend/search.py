@@ -1,32 +1,35 @@
 import json
-import src.helper as helper
-import src.KMP as KMP
-import src.helper as helper
+import backend.helper as helper
+import backend.KMP as KMP
+import backend.helper as helper
 
 #open file
-with open('data/data_13_21.json') as f1:
+with open('../../data/data_13_21.json') as f1:
     data1 = json.load(f1)
-with open('data/list_fakultas.json') as f2:
+with open('../../data/list_fakultas.json') as f2:
     data_lf = json.load(f2)
-with open('data/list_jurusan.json') as f3:
+with open('../../data/list_jurusan.json') as f3:
     data_lj = json.load(f3) 
-with open('data/kode_fakultas.json') as f4:
+with open('../../data/kode_fakultas.json') as f4:
     data_kf = json.load(f4)
-with open('data/kode_jurusan.json') as f5:
+with open('../../data/kode_jurusan.json') as f5:
     data_kj = json.load(f5)
 
 def NimSearch(x):
     db = []         
     for i in range(len(data1)):
         item = data1[i]
+        #search based on NIM faculty
         found = KMP.KMP(item[1],x)
         if not found:
             try:
+                #search based on NIM jurusan
                 found = KMP.KMP(item[2],x)
             except:
                 pass
         if found:
             try:
+                #kalo ada fakultas
                 mahasiswa = [item[0],item[1],item[2],data_lf[item[1][0:3]],data_lj[item[2][0:3]]]
             except:
                 mahasiswa = [item[0],item[1],None,data_lf[item[1][0:3]],None]
@@ -46,6 +49,7 @@ def JurusanAngkatanSearch(x):
         kjurusan = getKodeJurusan(jurusan)
 
     for a in kjurusan:
+        #gabungin jurusan dan angkatan
         NIM = a+angkatan
         db1 = NimSearch(NIM)
         if db == []:
@@ -137,23 +141,3 @@ def CompleteSearch(angkatan, nim, str_input):
     result = helper.intersection(db1,db2)
     result = helper.unique(result + db1 + db2)
     return result
-                
-        
-
-
-    
-
-
-
-# db = CompleteSearch("Tito IF 19  007")
-# if db == []:
-#     print("No results found")
-# else:
-#     for i in range(5):
-#         print("Nama: " + db[i][0])
-#         print("NIM Fakultas: " + db[i][1])
-#         print("NIM Jurusan: " + db[i][2])
-#         print("Fakultas: " + db[i][3])
-#         print("Jurusan: " + db[i][4])
-#         print()
-

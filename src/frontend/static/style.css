@@ -30,6 +30,13 @@ body {
   font-size: 20px;
 }
 
+.pagination {
+  display: flex;
+  margin: 5px;
+  padding: 0px;
+  width: 800px;
+}
+
 table {
   text-align: center;
 }
@@ -56,16 +63,20 @@ table {
 .search-form {
   width: 50vh;
   box-sizing: border-box;
-  border: 2px solid #ccc;
+  border: 2px solid #f0d9ff;
   border-radius: 15px;
   font-size: 15px;
   text-align: left;
-  transition: width 0.4s ease-in-out;
   padding: 5px 10px 5px 10px;
   margin-top: 3vh;
   margin-bottom: 2vh;
 }
-.search-btn {
+.search-form:focus {
+  outline: none;
+  border: 2px solid #e091ff;
+  border-radius: 15px;
+}
+.btn {
   background-color: #e091ff;
   border-radius: 15px;
   border: 2px solid #e091ff;
@@ -75,10 +86,25 @@ table {
   margin-top: 0px;
 }
 
+.btn:hover {
+  background-color: #c45aee;
+  border: 2px solid #c45aee;
+}
+
 h3 {
   font-size: 20px;
   text-align: center;
   margin-top: 0px;
   margin-bottom: 0px;
   color: #cd69f5;
+}
+
+.prev {
+  background-color: #e091ff;
+  border-radius: 15px;
+  border: 2px solid #e091ff;
+  padding: 5px 10px 5px 10px;
+  color: #f0d9ff;
+  font-size: 15px;
+  margin-top: 0px;
 }
